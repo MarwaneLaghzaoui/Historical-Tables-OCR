@@ -54,6 +54,6 @@ def extract_tables_from_pdf(pdf_path, output_csv_path):
     print(f"Les tableaux ont été extraits et sauvegardés dans {output_csv_path}")
 
 
-file_path = r'D:/GitHub/HOCR/test_pages/image_redressee.pdf'
-output_path = r'D:/GitHub/HOCR/table_extraction/image_redressee_output.csv' 
+file_path = r'D:/GitHub/HOCR/image_straightening/image_redressee_302.pdf'
+output_path = r'D:/GitHub/HOCR/table_extraction/image_redressee_302_output.csv' 
 extract_tables_from_pdf(file_path,output_path)
