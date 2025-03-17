@@ -46,7 +46,7 @@ def extract_tables_from_pdf(pdf_path, output_csv_path):
 
     # Sauvegarder les tableaux dans un fichier CSV
     with open(output_csv_path, mode='w', newline='', encoding='utf-8') as csv_file:
-        csv_writer = csv.writer(csv_file)
+        csv_writer = csv.writer(csv_file,delimiter="|")
         for table in tables:
             csv_writer.writerows(table)
             csv_writer.writerow([])  # Séparateur entre tableaux
@@ -54,6 +54,7 @@ def extract_tables_from_pdf(pdf_path, output_csv_path):
     print(f"Les tableaux ont été extraits et sauvegardés dans {output_csv_path}")
 
 
-file_path = r'D:/GitHub/HOCR/image_straightening/image_redressee_302.pdf'
-output_path = r'D:/GitHub/HOCR/table_extraction/image_redressee_302_output.csv' 
+# file_path = r'D:/GitHub/HOCR/image_straightening/image_redressee_302.pdf'
+file_path = r'D:/EISTI/Pfe/resultat.pdf'
+output_path = r'D:/GitHub/HOCR/table_extraction/30_pages.csv' 
 extract_tables_from_pdf(file_path,output_path)

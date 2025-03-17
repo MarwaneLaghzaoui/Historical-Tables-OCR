@@ -29,17 +29,8 @@ def manual_threshold(image, threshold):
 #             return np.mean(angles)
 #     return 0
 
-def detect_angle(binary_image, crop_ratio=0.15):
-
-    if len(binary_image.shape) == 3:  
-        binary_image = cv2.cvtColor(binary_image, cv2.COLOR_BGR2GRAY)
-    h, w = binary_image.shape  # Récupérer les dimensions de l'image
-    cropped_image = binary_image[:int(h * crop_ratio), :]  # Garder seulement les premières lignes
-
-    # Détection des bords avec Canny
-    edges = cv2.Canny(cropped_image, 50, 150, apertureSize=3)
-
-    # Détection des lignes avec Hough Transform
+def detect_angle(binary_image):
+    edges = cv2.Canny(binary_image, 50, 150, apertureSize=3)
     lines = cv2.HoughLines(edges, 1, np.pi / 180, 150)
     
     if lines is not None:
@@ -48,14 +39,41 @@ def detect_angle(binary_image, crop_ratio=0.15):
             rho, theta = line[0]
             angle = np.degrees(theta) - 90
             if angle < -45:
-                angle += 180  # Correction pour éviter des valeurs erronées
-            if abs(angle) < 10:  # Filtrer les angles aberrants
+                angle += 180
+            if abs(angle) < 15:
                 angles.append(angle)
-        
         if angles:
-            return np.mean(angles)  # Retourner l'angle moyen
+            return np.mean(angles)
+    return 0
 
-    return 0  # Retourner 0 si aucune ligne détectée
+
+# def detect_angle(binary_image, crop_ratio=0.15):
+
+#     if len(binary_image.shape) == 3:  
+#         binary_image = cv2.cvtColor(binary_image, cv2.COLOR_BGR2GRAY)
+#     h, w = binary_image.shape  # Récupérer les dimensions de l'image
+#     cropped_image = binary_image[:int(h * crop_ratio), :]  # Garder seulement les premières lignes
+
+#     # Détection des bords avec Canny
+#     edges = cv2.Canny(cropped_image, 50, 150, apertureSize=3)
+
+#     # Détection des lignes avec Hough Transform
+#     lines = cv2.HoughLines(edges, 1, np.pi / 180, 150)
+    
+#     if lines is not None:
+#         angles = []
+#         for line in lines:
+#             rho, theta = line[0]
+#             angle = np.degrees(theta) - 90
+#             if angle < -45:
+#                 angle += 180  # Correction pour éviter des valeurs erronées
+#             if abs(angle) < 10:  # Filtrer les angles aberrants
+#                 angles.append(angle)
+        
+#         if angles:
+#             return np.mean(angles)  # Retourner l'angle moyen
+
+#     return 0  # Retourner 0 si aucune ligne détectée
 
 
 # Fonction pour redresser l'image en fonction de l'angle détecté
@@ -73,12 +91,10 @@ def straighten_image(image, angle,pulse):
 
 def main():
     # Chemin du fichier PDF source et du fichier PDF de sortie
-
-
     pdf_path = r'D:/GitHub/HOCR/image_straightening/mortstatsh_1905.pdf'
 
     # output_pdf_path = r'D:/GitHub/HOCR/image_straightening/image_redressee_302.pdf' 
-    output_pdf_path = r'D:/GitHub/HOCR/image_straightening/mortstatsh_1905_output_2.pdf' 
+    output_pdf_path = r'D:/GitHub/HOCR/image_straightening/tmp.pdf' 
     
     # Charger le document PDF
     pdf_document = fitz.open(pdf_path)
@@ -98,8 +114,8 @@ def main():
         # Image binarisée
         binary_image = manual_threshold(image_gray, 200)
         while((abs(angle)>=minimum_angle)):
-            angle = detect_angle(binary_image)
 
+            angle = detect_angle(binary_image)
             # Redresser l'image
             image_redresse = straighten_image(image, angle,pulse)            
             binary_image = image_redresse
