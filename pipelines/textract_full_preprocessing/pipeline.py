@@ -26,9 +26,9 @@ def main():
     pdf_straightened_path = pdf_path+"output_"+pdf_file_name
 
     #Creating vertical and horizontal lines to make data extraction easier
-
     
 
+    
     #Extracting tables from the pdf
     extract_tables_from_pdf(pdf_straightened_path, csv_path)
 main()

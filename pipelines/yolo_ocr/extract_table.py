@@ -44,8 +44,8 @@ def extract_tables_from_pdf(pdf_path, csv_path):
     results = model.predict(img)
 
     # observe results
-    print('Boxes: ', results[0].boxes)
-    render = render_result(model=model, image=img, result=results[0])
+    # print('Boxes: ', results[0].boxes)
+    # render = render_result(model=model, image=img, result=results[0])
     # sv.plot_image(render)
 
     x1, y1, x2, y2, _, _ = tuple(int(item) for item in results[0].boxes.data.cpu().numpy()[0])
@@ -57,7 +57,7 @@ def extract_tables_from_pdf(pdf_path, csv_path):
 
     pytesseract.pytesseract.tesseract_cmd = r'D:\Tesseract\tesseract.exe' #Path to tesseract.exe because adding to PATH may not work
 
-    psm = 3 # 3 is also great for only getting numbers and ignore labels
+    psm = 6 # 3 is also great for only getting numbers and ignore labels
 
     print(f"Testing with PSM: {psm}")
     extracted_text = pytesseract.image_to_string(cropped_image, config=f"--psm {psm} --oem 3")
@@ -72,3 +72,4 @@ def extract_tables_from_pdf(pdf_path, csv_path):
 
     # sv.plot_image(cropped_image)
 
+# extract_tables_from_pdf(pdf_path,csv_path)

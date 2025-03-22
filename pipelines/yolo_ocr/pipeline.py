@@ -23,9 +23,6 @@ def main():
     
     pdf_straightened_path = pdf_path+"output_"+pdf_file_name
 
-
-
-
     # Extraction des tableaux du PDF
     extract_tables_from_pdf(pdf_straightened_path, csv_path)
 
