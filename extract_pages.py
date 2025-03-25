@@ -17,8 +17,8 @@ def extract_pdf_pages(pdf_path, output_pdf_path, page_nums):
     else:
         print("Aucune page valide extraite.")
 
-pdf_path = r"D:/GitHub/HOCR/image_straightening/mortstatsh_1905.pdf"
-output_pdf_path = r"D:/GitHub/HOCR/mortstatsh_1905_extrait.pdf"
-page_nums = [206]
+pdf_path = r"D:/EISTI/Pfe/resultat.pdf"
+output_pdf_path = r"D:/GitHub/HOCR/test.pdf"
+page_nums = [1,2,3]
 
 extract_pdf_pages(pdf_path, output_pdf_path, page_nums)

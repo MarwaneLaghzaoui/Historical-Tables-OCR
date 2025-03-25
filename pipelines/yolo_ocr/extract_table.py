@@ -2,74 +2,75 @@ import numpy as np
 import pandas as pd
 import fitz
 import cv2
-import supervision as sv
-
 import pytesseract
-from pytesseract import Output
-
-from ultralyticsplus import YOLO, render_result
 from PIL import Image
+from ultralyticsplus import YOLO
 
-
+# Configuration pandas
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 
+def extract_tables_from_pdf(pdf_path, csv_path, psm=6):
+    """Extrait les tableaux d'un PDF et les sauvegarde en CSV."""
+    
+    tessdata_dir_config = r'--tessdata-dir D:/Tesseract/tessdata'
 
-# pdf_path = r"D://GitHub//HOCR//pipelines//yolo_ocr//pdf_folder//1.pdf"
-# csv_path = r"D://GitHub//HOCR//pipelines//yolo_ocr//csv_tables//output.csv"
-
-def extract_tables_from_pdf(pdf_path, csv_path):
-
+    # Charger le document PDF
     pdf_document = fitz.open(pdf_path)
+    print(f"Nombre de pages : {len(pdf_document)}")
 
-    page = pdf_document[0]
-    pix = page.get_pixmap()  # Augmenter le DPI pour meilleure qualité
-    img = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, pix.n)
-
-    # Convertir en format OpenCV
-    image = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-
-    # sv.plot_image(image)
-
+    # Initialiser YOLO pour la détection des tables
     model = YOLO('keremberke/yolov8m-table-extraction')
+    model.overrides.update({
+        'conf': 0.25,  # Seuil de confiance
+        'iou': 0.45,  # Seuil IoU
+        'agnostic_nms': False,
+        'max_det': 1000
+    })
 
-    # set model parameters
-    model.overrides['conf'] = 0.25  # NMS confidence threshold
-    model.overrides['iou'] = 0.45  # NMS IoU threshold
-    model.overrides['agnostic_nms'] = False  # NMS class-agnostic
-    model.overrides['max_det'] = 1000  # maximum number of detections per image
+    all_data = []  # Liste pour stocker les données extraites de toutes les pages
 
-    # perform inference
-    results = model.predict(img)
+    for page_num in range(len(pdf_document)):
+        print(f"Traitement de la page {page_num + 1}...")
 
-    # observe results
-    # print('Boxes: ', results[0].boxes)
-    # render = render_result(model=model, image=img, result=results[0])
-    # sv.plot_image(render)
+        # Convertir la page en image
+        page = pdf_document[page_num]
+        pix = page.get_pixmap()
+        img = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, pix.n)
+        image = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-    x1, y1, x2, y2, _, _ = tuple(int(item) for item in results[0].boxes.data.cpu().numpy()[0])
-    img = np.array(image)
-    #cropping
-    cropped_image = img[y1:y2, x1:x2]
-    cropped_image = Image.fromarray(cropped_image)
+        # Détection des tables avec YOLO
+        results = model.predict(image)
 
+        if len(results[0].boxes) == 0:
+            print(f"Aucune table détectée sur la page {page_num + 1}.")
+            continue
 
-    pytesseract.pytesseract.tesseract_cmd = r'D:\Tesseract\tesseract.exe' #Path to tesseract.exe because adding to PATH may not work
+        for box in results[0].boxes.data.cpu().numpy():
+            x1, y1, x2, y2 = map(int, box[:4])
 
-    psm = 6 # 3 is also great for only getting numbers and ignore labels
+            # Découper l'image pour extraire le tableau
+            cropped_image = image[y1:y2, x1:x2]
+            cropped_image = Image.fromarray(cropped_image)
 
-    print(f"Testing with PSM: {psm}")
-    extracted_text = pytesseract.image_to_string(cropped_image, config=f"--psm {psm} --oem 3")
-    # Transformation en format CSV
-    lines = extracted_text.strip().split('\n')
-    data = [line.split() for line in lines]
+            # OCR sur l'image découpée
+            print(f"Application de l'OCR sur la page {page_num + 1} (PSM={psm})...")
+            extracted_text = pytesseract.image_to_string(
+                cropped_image, config=f"--psm {psm} --oem 3 -l digitdetector {tessdata_dir_config}"
+            )
 
-    df = pd.DataFrame(data)
-    df.to_csv(csv_path, index=False, header=False, encoding='utf-8')
+            # Nettoyage et transformation en format CSV
+            lines = extracted_text.strip().split('\n')
+            data = [line.split() for line in lines if line.strip()]
 
-    print(f"Extraction terminée. Résultats enregistrés dans {csv_path}")
+            if data:
+                all_data.extend(data)
 
-    # sv.plot_image(cropped_image)
-
-# extract_tables_from_pdf(pdf_path,csv_path)
+    # Sauvegarde du fichier CSV
+    if all_data:
+        df = pd.DataFrame(all_data)
+        df.to_csv(csv_path, index=False, header=False, encoding='utf-8', sep='|')
+        print(f"Extraction terminée. Résultats enregistrés dans {csv_path}")
+    else:
+        print("Aucune donnée extraite, fichier CSV non créé.")
