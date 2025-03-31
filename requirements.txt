@@ -1,0 +1,12 @@
+boto3 
+botocore 
+certifi 
+urllib3
+pypdf2
+fitz
+cv2
+pytesseract
+ultralyticsplus
+PIL
+pandas
+numpy

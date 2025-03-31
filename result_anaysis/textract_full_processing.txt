@@ -1,0 +1,4 @@
+Labels détectés = 4284
+Chiffres extraits = 21857
+Chiffres + II = 71
+Erreurs détectées = 994

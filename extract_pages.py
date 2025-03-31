@@ -4,7 +4,7 @@ def extract_pdf_pages(pdf_path, output_pdf_path, page_nums):
     pdf_document = fitz.open(pdf_path)
     new_pdf = fitz.open()
 
-    for page_num in page_nums:
+    for page_num in range(page_nums):
         if page_num < 0 or page_num >= len(pdf_document):
             continue
 
@@ -17,8 +17,8 @@ def extract_pdf_pages(pdf_path, output_pdf_path, page_nums):
     else:
         print("Aucune page valide extraite.")
 
-pdf_path = r"D:/EISTI/Pfe/resultat.pdf"
-output_pdf_path = r"D:/GitHub/HOCR/test.pdf"
-page_nums = [1,2,3]
+pdf_path = r"D:/EISTI/Pfe/exemple2.pdf"
+output_pdf_path = r"D:/EISTI/Pfe/exemple2_30 pages.pdf"
+page_nums = 30
 
 extract_pdf_pages(pdf_path, output_pdf_path, page_nums)

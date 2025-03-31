@@ -18,17 +18,16 @@ def main():
     pdf_path = r"D://GitHub//HOCR//pipelines//textract_skew_only//pdf_folder//"
     csv_path = r"D://GitHub//HOCR//pipelines//textract_skew_only//csv_tables//"+csv_file_name
 
-    print(pdf_path+pdf_file_name)
-    print(csv_path)
-
     #Correcting the skew angle to perform better data extraction
-    correct_pdf_skew_angle(pdf_path,pdf_file_name)
+    # correct_pdf_skew_angle(pdf_path,pdf_file_name)
     pdf_straightened_path = pdf_path+"output_"+pdf_file_name
 
     #Creating vertical and horizontal lines to make data extraction easier
     
 
-    
+    path = r"D://EISTI/Pfe/resultat.pdf"
+
+    csv_path = r"D://GitHub//HOCR//pipelines//textract_full_preprocessing//csv_tables"+csv_file_name
     #Extracting tables from the pdf
-    extract_tables_from_pdf(pdf_straightened_path, csv_path)
+    extract_tables_from_pdf(path, csv_path)
 main()
