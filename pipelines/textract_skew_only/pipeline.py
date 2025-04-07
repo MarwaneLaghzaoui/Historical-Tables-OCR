@@ -1,34 +1,35 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__))) 
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 
-from recadrer_image_v4 import correct_pdf_skew_angle
+from correct_skew_angle import correct_pdf_skew_angle
 from extract_table import extract_tables_from_pdf
 
 def main():
 
-    #Define file names to make output names different (must be the name of file you want to process)
+    Tk().withdraw()  # Ne pas afficher la fenêtre principale Tk
+    selected_pdf_path = askopenfilename(title="Choisir un fichier PDF", filetypes=[("PDF files", "*.pdf")])
 
-    file_name = r"mortstatsh_1905-207"
-    pdf_file_name = file_name+r".pdf"
-    csv_file_name = file_name+r".csv"
+    if not selected_pdf_path:
+        print("Aucun fichier sélectionné.")
+        return
 
-    pdf_path = r"D://GitHub//HOCR//pipelines//textract_skew_only//pdf_folder//"
-    csv_path = r"D://GitHub//HOCR//pipelines//textract_skew_only//csv_tables//"+csv_file_name
+    # Chemin vers le fichier à traiter
+    file_name = os.path.splitext(os.path.basename(selected_pdf_path))[0]
+    pdf_file_name = os.path.basename(selected_pdf_path)
+    csv_file_name = file_name + ".csv"
 
-    print(pdf_path+pdf_file_name)
-    print(csv_path)
+    # Définir les chemins de sortie
+    pdf_folder = os.path.dirname(selected_pdf_path) + os.sep
+    csv_folder = "./pipelines/textract_skew_only/csv_tables/"
+    csv_path = os.path.join(csv_folder, csv_file_name)
 
-    # correct_pdf_skew_angle(pdf_path,pdf_file_name)
+    correct_pdf_skew_angle(pdf_folder,pdf_file_name)
 
-    # pdf_straightened_path = pdf_path+"output_"+pdf_file_name
+    straightened_pdf_path = pdf_folder+"output_"+pdf_file_name
     # Extraction des tableaux du PDF
-    # extract_tables_from_pdf(pdf_straightened_path, csv_path)
-    # path = r"D://EISTI/Pfe//resultat.pdf"
-    path = r"D://EISTI/Pfe//exemple2_30pages.pdf"
-    # path = r"D:/GitHub/HOCR/pipelines/textract_skew_only/pdf_folder/output_mortstatsh_1905-207.pdf"
-    
-    csv_path = r"D://GitHub//HOCR//pipelines//textract_skew_only//csv_tables//csv_tablesmortstatsh_1905-207.csv"
-    extract_tables_from_pdf(path,csv_path)
+    extract_tables_from_pdf(straightened_pdf_path, csv_path)
 
 main()

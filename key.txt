@@ -1,3 +1,0 @@
-clé api : AKIA6B2UU5L5NBTSU7ZZ
-clé api secrete : 9Ui6WDIr1rhMRnEkijW8kA6o1ZyGoDGrA1GXJ5AO
-région : eu-west-1
