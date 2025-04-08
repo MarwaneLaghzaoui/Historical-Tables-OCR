@@ -1,12 +1,18 @@
 Si vous avez comme objectif de reprendre le code pour l'améliorer, voici nos conseils.
-Premièrement, essayez de rendre le prétraiement (quadrillage les lignes et colonnes) automatique car actuellement, cela fonction à partir de coefficients afin 
-de s'assurer de detecter correctement le format de la page.
 
-Une fois fait, il vous sera facile d'obtenir un grand nombre d'images des chiffres des tables, idéal pour finetune Tesseract qui manque encore de précision. 
-Un finetune de la version de base eng.traineddata est conseillé car notre model digitdetector n'est pas optimal. Pour chaque chiffre allant de 1 à 9, il a été entrainé
-sur 25 images tres zoomées (80x80), 25 images moyennes (130x130) et 25 grandes images (250x250). Un finetune sur 3000, 5000 voire 10 000 images (attention au surentrainement)
-pourrait améliorer les prédictions de Tesseract sur les chiffres. 
+Premièrement, essayez de rendre le prétraitement (quadrillage des lignes et colonnes) automatique, car actuellement cela fonctionne à partir de coefficients, afin de s'assurer de détecter correctement le format de la page.
 
-Enfin pour les labels, lancer une detection seulement sur les lettres pourrait permettre de les detecter et les extraire à la suite des chiffres par exemple pour ensuite
-les faire coincider à l'aide d'un script. Nous avons eu recours à cette méthode car à une de nos version les labels et les chiffres n'étaient pas alignés donc les données auraient
-été faussées. 
+Une fois cela fait, il vous sera facile d'obtenir un grand nombre d'images des chiffres présents dans les tableaux, idéal pour fine-tuner Tesseract, qui manque encore de précision.
+Un fine-tuning de la version de base eng.traineddata est conseillé, car notre modèle digitdetector n'est pas optimal.
+Pour chaque chiffre allant de 1 à 9, il a été entraîné sur :
+
+25 images très zoomées (80×80),
+
+25 images moyennement zoomées (130×130),
+
+et 25 grandes images (250×250).
+
+Un fine-tuning sur 3 000, 5 000 voire 10 000 images (attention au surentraînement) pourrait améliorer les prédictions de Tesseract sur les chiffres.
+
+Enfin, pour les labels, lancer une détection seulement sur les lettres pourrait permettre de les détecter et de les extraire à la suite des chiffres — par exemple — pour ensuite les faire coïncider à l’aide d’un script.
+Nous avons eu recours à cette méthode, car dans l’une de nos versions, les labels et les chiffres n’étaient pas alignés, ce qui aurait faussé les données.
