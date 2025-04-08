@@ -28,3 +28,4 @@ d'un autre dossier.
 Dans le dossier pipelines, vous trouverez les trois versions d'extraction des données. Executez avec python le fichier pipeline.py, de manière graphique grâce à un IDE ou en executant la commande dans un terminal python pipelines\nom_de_la_methode_voulue\pipeline.py
 
 Une interface graphique s'ouvrira, choisissez le document que vous souhaitez traiter. Vous obtiendez une version transformée avec la méthode correspondante dans le dossier pdf_folder (nom du fichier précédé de output_x.pdf) et un fichier csv ou excell (textract ou tesseract) dans le dossier csv_tables.
+

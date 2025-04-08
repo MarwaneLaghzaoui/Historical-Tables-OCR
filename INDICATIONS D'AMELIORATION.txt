@@ -1,0 +1,12 @@
+Si vous avez comme objectif de reprendre le code pour l'améliorer, voici nos conseils.
+Premièrement, essayez de rendre le prétraiement (quadrillage les lignes et colonnes) automatique car actuellement, cela fonction à partir de coefficients afin 
+de s'assurer de detecter correctement le format de la page.
+
+Une fois fait, il vous sera facile d'obtenir un grand nombre d'images des chiffres des tables, idéal pour finetune Tesseract qui manque encore de précision. 
+Un finetune de la version de base eng.traineddata est conseillé car notre model digitdetector n'est pas optimal. Pour chaque chiffre allant de 1 à 9, il a été entrainé
+sur 25 images tres zoomées (80x80), 25 images moyennes (130x130) et 25 grandes images (250x250). Un finetune sur 3000, 5000 voire 10 000 images (attention au surentrainement)
+pourrait améliorer les prédictions de Tesseract sur les chiffres. 
+
+Enfin pour les labels, lancer une detection seulement sur les lettres pourrait permettre de les detecter et les extraire à la suite des chiffres par exemple pour ensuite
+les faire coincider à l'aide d'un script. Nous avons eu recours à cette méthode car à une de nos version les labels et les chiffres n'étaient pas alignés donc les données auraient
+été faussées. 
