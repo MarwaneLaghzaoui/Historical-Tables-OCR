@@ -11,6 +11,11 @@ linux : source env/bin/activate
 # Installer les packages
 pip install -r requirements.txt
 
+# Textract 
+Afin de pouvoir utiliser Textract, il vous faut une clé API. Ensuite telechargez AWS CLI qui va vous permettre de configurer un profuile Amazon, dans notre cas appellé cytech.
+Une fois le CLI installé executez la commande aws configure (aws configure --profile mon_profile pour creer un profile directement). Utilisez le région eu-west-1 de préférence
+
+
 # Tesseract 
 Installez tesseract, 5.5 de préférence, depuis le github officiel de Tesseract. Une fois fait, ajoutez le fichier digitdetector.traineddata que vous trouverez dans le dossier "model" au dossier tessdata de tesseract généralement situé à
 
